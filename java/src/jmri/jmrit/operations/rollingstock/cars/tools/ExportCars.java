@@ -2,21 +2,28 @@ package jmri.jmrit.operations.rollingstock.cars.tools;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jmri.jmrit.XmlFile;
 import jmri.jmrit.operations.rollingstock.cars.Car;
 import jmri.jmrit.operations.setup.OperationsSetupXml;
 import jmri.jmrit.operations.setup.Setup;
-import jmri.util.swing.JmriJOptionPane;
 
 /**
  * Exports the car roster into a comma delimited file (CSV).
  *
- * @author Daniel Boudreau Copyright (C) 2010, 2011, 2016, 2024
+ * @author Daniel Boudreau Copyright (C) 2010, 2011, 2016
+ *
  */
 public class ExportCars extends XmlFile {
 
@@ -31,11 +38,25 @@ public class ExportCars extends XmlFile {
      * Create CSV file based on the car list.
      */
     public void writeOperationsCarFile() {
-        makeBackupFile(defaultOperationsFilename());
+        writeCars(defaultOperationsFilename());
+        // if a removable drive is installed, save file there too
+        if (Files.isDirectory(Path.of("/media/pi/"))) {
+            writeCars("/media/pi/" + operationsFileName);
+        }
+        if (Files.isDirectory(Path.of("/Volumes/NO NAME/"))) {
+            writeCars("/Volumes/NO NAME/" + operationsFileName);
+        }
+        if (Files.isDirectory(Path.of("/media/standards/HP v150w/"))) {
+            writeCars("/media/standards/HP v150w/" + operationsFileName);
+        }
+    }
+
+    private void writeCars(String path) {
+        makeBackupFile(path);
         try {
-            if (!checkFile(defaultOperationsFilename())) {
+            if (!checkFile(path)) {
                 // The file does not exist, create it before writing
-                java.io.File file = new java.io.File(defaultOperationsFilename());
+                java.io.File file = new java.io.File(path);
                 java.io.File parentDir = file.getParentFile();
                 if (!parentDir.exists()) {
                     if (!parentDir.mkdir()) {
@@ -46,9 +67,10 @@ public class ExportCars extends XmlFile {
                     log.debug("File created");
                 }
             }
-            writeFile(defaultOperationsFilename());
+            writeFile(path);
         } catch (IOException e) {
-            log.error("Exception while writing the new CSV operations file, may not be complete", e);
+            log.error("Exception while writing the new CSV operations file at " +
+                      path + ", may not be complete", e);
         }
     }
 
@@ -107,7 +129,6 @@ public class ExportCars extends XmlFile {
                     Bundle.getMessage("FinalDestination"),
                     LOCATION_TRACK_SEPARATOR,
                     Bundle.getMessage("Track"),
-                    Bundle.getMessage("SchId"),
                     Bundle.getMessage( "RFID_Tag"));
 
             // store car attributes
@@ -141,7 +162,7 @@ public class ExportCars extends XmlFile {
                         LOCATION_TRACK_SEPARATOR,
                         car.getReturnWhenLoadedDestTrackName(),
                         car.getReturnWhenLoadedLoadName(),
-                        car.getDivisionName(),
+                        car.getDivision(),
                         car.getTrainName(),
                         car.getDestinationName(),
                         LOCATION_TRACK_SEPARATOR,
@@ -149,21 +170,20 @@ public class ExportCars extends XmlFile {
                         car.getFinalDestinationName(),
                         LOCATION_TRACK_SEPARATOR,
                         car.getFinalDestinationTrackName(),
-                        car.getScheduleItemId(),
                         car.getRfid());
             }
             fileOut.flush();
             fileOut.close();
-            log.info("Exported {} cars to file {}", _carList.size(), defaultOperationsFilename());
-            JmriJOptionPane.showMessageDialog(null, Bundle.getMessage("ExportedCarsToFile",
-                _carList.size(), defaultOperationsFilename()), Bundle.getMessage("ExportComplete"),
-                    JmriJOptionPane.INFORMATION_MESSAGE);
+            log.info("Exported {} cars to file {}", _carList.size(), name);
+            JOptionPane.showMessageDialog(null, MessageFormat.format(Bundle.getMessage("ExportedCarsToFile"), new Object[]{
+                _carList.size(), name}), Bundle.getMessage("ExportComplete"),
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
             log.error("Can not open export cars CSV file: {}", file.getName());
-            JmriJOptionPane.showMessageDialog(null,
-                    Bundle.getMessage("ExportedCarsToFile",
-                            0, defaultOperationsFilename()),
-                    Bundle.getMessage("ExportFailed"), JmriJOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    MessageFormat.format(Bundle.getMessage("ExportedCarsToFile"),
+                            new Object[] { 0, name }),
+                    Bundle.getMessage("ExportFailed"), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -185,6 +205,6 @@ public class ExportCars extends XmlFile {
 
     private static String operationsFileName = "ExportOperationsCarRoster.csv"; // NOI18N
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExportCars.class);
+    private final static Logger log = LoggerFactory.getLogger(ExportCars.class);
 
 }

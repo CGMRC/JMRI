@@ -1,17 +1,22 @@
 package jmri.jmrit.operations.rollingstock.engines;
 
 import java.awt.GridBagLayout;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jmri.InstanceManager;
-import jmri.jmrit.operations.rollingstock.*;
+import jmri.jmrit.operations.rollingstock.RollingStock;
+import jmri.jmrit.operations.rollingstock.RollingStockAttribute;
+import jmri.jmrit.operations.rollingstock.RollingStockEditFrame;
 import jmri.jmrit.operations.rollingstock.engines.tools.EngineAttributeEditFrame;
 import jmri.jmrit.operations.setup.Control;
-import jmri.util.swing.JmriJOptionPane;
 
 /**
  * Frame for user edit of engine
@@ -46,8 +51,8 @@ public class EngineEditFrame extends RollingStockEditFrame {
     @Override
     public void initComponents() {
 
-        groupComboBox = InstanceManager.getDefault(ConsistManager.class).getComboBox();
-        modelComboBox = engineModels.getComboBox();
+        //groupComboBox = InstanceManager.getDefault(ConsistManager.class).getComboBox();
+        //modelComboBox = engineModels.getComboBox();
 
         super.initComponents();
 
@@ -61,10 +66,10 @@ public class EngineEditFrame extends RollingStockEditFrame {
 
         // load tool tips
         builtTextField.setToolTipText(Bundle.getMessage("TipBuildDate"));
-        editModelButton.setToolTipText(Bundle.getMessage("TipAddDeleteReplace",
-                Bundle.getMessage("Model").toLowerCase()));
-        editGroupButton.setToolTipText(Bundle.getMessage("TipAddDeleteReplace",
-                Bundle.getMessage("Consist").toLowerCase()));
+        editModelButton.setToolTipText(MessageFormat.format(Bundle.getMessage("TipAddDeleteReplace"),
+                new Object[] { Bundle.getMessage("Model").toLowerCase() }));
+        //editGroupButton.setToolTipText(MessageFormat.format(Bundle.getMessage("TipAddDeleteReplace"),
+                //new Object[] { Bundle.getMessage("Consist").toLowerCase() }));
         bUnitCheckBox.setToolTipText(Bundle.getMessage("TipBoosterUnit"));
 
         deleteButton.setToolTipText(Bundle.getMessage("TipDeleteButton"));
@@ -72,14 +77,14 @@ public class EngineEditFrame extends RollingStockEditFrame {
         saveButton.setToolTipText(Bundle.getMessage("TipSaveButton"));
 
         // row 3
-        pModel.setLayout(new GridBagLayout());
-        pModel.setBorder(BorderFactory.createTitledBorder(Bundle.getMessage("Model")));
-        addItem(pModel, modelComboBox, 1, 0);
-        addItem(pModel, editModelButton, 2, 0);
-        pModel.setVisible(true);
+        //pModel.setLayout(new GridBagLayout());
+        //pModel.setBorder(BorderFactory.createTitledBorder(Bundle.getMessage("Model")));
+        //addItem(pModel, modelComboBox, 1, 0);
+        //addItem(pModel, editModelButton, 2, 0);
+        //pModel.setVisible(true);
 
         // row 12
-        pPower.setLayout(new BoxLayout(pPower, BoxLayout.X_AXIS));
+        //pPower.setLayout(new BoxLayout(pPower, BoxLayout.X_AXIS));
         JPanel pHp = new JPanel();
         pHp.setLayout(new GridBagLayout());
         pHp.setBorder(BorderFactory.createTitledBorder(Bundle.getMessage("Hp")));
@@ -88,18 +93,18 @@ public class EngineEditFrame extends RollingStockEditFrame {
         pTe.setLayout(new GridBagLayout());
         pTe.setBorder(BorderFactory.createTitledBorder(Bundle.getMessage("TractiveEffort")));
         addItem(pTe, teTextField, 0, 0);
-        pPower.add(pHp);
-        pPower.add(pTe);
-        pPower.setVisible(true);
+        //pPower.add(pHp);
+        //pPower.add(pTe);
+        //pPower.setVisible(true);
 
-        teTextField.setToolTipText(Bundle.getMessage("TipConvertTE-HP", SPEED));
+        teTextField.setToolTipText(MessageFormat.format(Bundle.getMessage("TipConvertTE-HP"), new Object[] { SPEED }));
 
-        pGroup.setBorder(BorderFactory.createTitledBorder(Bundle.getMessage("Consist")));
+        //pGroup.setBorder(BorderFactory.createTitledBorder(Bundle.getMessage("Consist")));
 
         addEditButtonAction(editModelButton);
 
-        addComboBoxAction(modelComboBox);
-        modelComboBox.setSelectedIndex(0);
+        //addComboBoxAction(modelComboBox);
+        //modelComboBox.setSelectedIndex(0);
 
         addHelpMenu("package.jmri.jmrit.operations.Operations_LocomotivesAdd", true); // NOI18N
     }
@@ -123,41 +128,41 @@ public class EngineEditFrame extends RollingStockEditFrame {
         setTitle(Bundle.getMessage("TitleEngineEdit"));
         
         if (!engineModels.containsName(engine.getModel())) {
-            String msg = Bundle.getMessage("modelNameNotExist",
-                    engine.getModel());
-            if (JmriJOptionPane.showConfirmDialog(this, msg, Bundle.getMessage("engineAddModel"),
-                    JmriJOptionPane.YES_NO_OPTION) == JmriJOptionPane.YES_OPTION) {
+            String msg = MessageFormat.format(Bundle.getMessage("modelNameNotExist"),
+                    new Object[] { engine.getModel() });
+            if (JOptionPane.showConfirmDialog(this, msg, Bundle.getMessage("engineAddModel"),
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 engineModels.addName(engine.getModel());
             }
         }
-        modelComboBox.setSelectedItem(engine.getModel());
+        //modelComboBox.setSelectedItem(engine.getModel());
 
         super.load(engine);
 
-        pBlocking.setVisible(engine.getConsist() != null);
-        blockingTextField.setEnabled(false); // don't allow user to modify, only see
+        //pBlocking.setVisible(engine.getConsist() != null);
+        //blockingTextField.setEnabled(false); // don't allow user to modify, only see
         bUnitCheckBox.setSelected(engine.isBunit());
         hpTextField.setText(engine.getHp());
-        groupComboBox.setSelectedItem(engine.getConsistName());
+        //groupComboBox.setSelectedItem(engine.getConsistName());
     }
 
     // combo boxes
     @Override
     public void comboBoxActionPerformed(java.awt.event.ActionEvent ae) {
-        if (ae.getSource() == modelComboBox) {
-            if (modelComboBox.getSelectedItem() != null) {
-                String model = (String) modelComboBox.getSelectedItem();
+        //if (ae.getSource() == modelComboBox) {
+            //if (modelComboBox.getSelectedItem() != null) {
+                //String model = (String) modelComboBox.getSelectedItem();
                 // load the default hp and length for the model selected
-                hpTextField.setText(engineModels.getModelHorsepower(model));
-                weightTonsTextField.setText(engineModels.getModelWeight(model));
-                if (engineModels.getModelLength(model) != null && !engineModels.getModelLength(model).isEmpty()) {
-                    lengthComboBox.setSelectedItem(engineModels.getModelLength(model));
-                }
-                if (engineModels.getModelType(model) != null && !engineModels.getModelType(model).isEmpty()) {
-                    typeComboBox.setSelectedItem(engineModels.getModelType(model));
-                }
-            }
-        }
+                //hpTextField.setText(engineModels.getModelHorsepower(model));
+                //weightTonsTextField.setText(engineModels.getModelWeight(model));
+                //if (engineModels.getModelLength(model) != null && !engineModels.getModelLength(model).isEmpty()) {
+                    //lengthComboBox.setSelectedItem(engineModels.getModelLength(model));
+                //}
+                //if (engineModels.getModelType(model) != null && !engineModels.getModelType(model).isEmpty()) {
+                    //typeComboBox.setSelectedItem(engineModels.getModelType(model));
+                //}
+            //}
+        //}
         super.comboBoxActionPerformed(ae);
     }
 
@@ -168,8 +173,8 @@ public class EngineEditFrame extends RollingStockEditFrame {
                 roadNumberTextField.getText());
         if (existingEngine != null) {
             if (engine == null || !existingEngine.getId().equals(engine.getId())) {
-                JmriJOptionPane.showMessageDialog(this, Bundle.getMessage("engineExists"),
-                        Bundle.getMessage("engineCanNotUpdate"), JmriJOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, Bundle.getMessage("engineExists"),
+                        Bundle.getMessage("engineCanNotUpdate"), JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
@@ -185,19 +190,19 @@ public class EngineEditFrame extends RollingStockEditFrame {
 
         engine.setBunit(bUnitCheckBox.isSelected());
 
-        if (groupComboBox.getSelectedItem() != null) {
-            if (groupComboBox.getSelectedItem().equals(EngineManager.NONE)) {
-                engine.setConsist(null);
-                engine.setBlocking(Engine.DEFAULT_BLOCKING_ORDER);
-            } else if (!engine.getConsistName().equals(groupComboBox.getSelectedItem())) {
-                engine.setConsist(InstanceManager.getDefault(ConsistManager.class).getConsistByName((String) groupComboBox.getSelectedItem()));
-                if (engine.getConsist() != null) {
-                    engine.setBlocking(engine.getConsist().getSize());
-                    blockingTextField.setText(Integer.toString(engine.getBlocking()));
-                }
-            }
-        }
-        pBlocking.setVisible(engine.getConsist() != null);
+        //if (groupComboBox.getSelectedItem() != null) {
+            //if (groupComboBox.getSelectedItem().equals(EngineManager.NONE)) {
+                //engine.setConsist(null);
+                //engine.setBlocking(Engine.DEFAULT_BLOCKING_ORDER);
+            //} else if (!engine.getConsistName().equals(groupComboBox.getSelectedItem())) {
+                //engine.setConsist(InstanceManager.getDefault(ConsistManager.class).getConsistByName((String) groupComboBox.getSelectedItem()));
+                //if (engine.getConsist() != null) {
+                    //engine.setBlocking(engine.getConsist().getSize());
+                    //blockingTextField.setText(Integer.toString(engine.getBlocking()));
+                //}
+            //}
+        //}
+        //pBlocking.setVisible(engine.getConsist() != null);
 
         convertTractiveEffortToHp();
         // confirm that horsepower is a number
@@ -206,8 +211,8 @@ public class EngineEditFrame extends RollingStockEditFrame {
                 Integer.parseInt(hpTextField.getText());
                 engine.setHp(hpTextField.getText());
             } catch (Exception e) {
-                JmriJOptionPane.showMessageDialog(this, Bundle.getMessage("engineHorsepower"),
-                        Bundle.getMessage("engineCanNotHp"), JmriJOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, Bundle.getMessage("engineHorsepower"),
+                        Bundle.getMessage("engineCanNotHp"), JOptionPane.ERROR_MESSAGE);
             }
         }
         
@@ -217,12 +222,12 @@ public class EngineEditFrame extends RollingStockEditFrame {
             for (Engine cEngine : engines) {
                 if (cEngine != engine) {
                     if (cEngine.getLocation() != engine.getLocation() || cEngine.getTrack() != engine.getTrack()) {
-                        int results = JmriJOptionPane.showConfirmDialog(this, Bundle
-                                .getMessage("engineInConsistLocation",
-                                engine.toString(), engine.getLocationName(), engine.getTrackName()),
+                        int results = JOptionPane.showConfirmDialog(this, MessageFormat.format(Bundle
+                                .getMessage("engineInConsistLocation"),
+                                new Object[]{engine.toString(), engine.getLocationName(), engine.getTrackName()}),
                                 Bundle.getMessage("enginePartConsist"),
-                                JmriJOptionPane.YES_NO_OPTION);
-                        if (results == JmriJOptionPane.YES_OPTION) {
+                                JOptionPane.YES_NO_OPTION);
+                        if (results == JOptionPane.YES_OPTION) {
                             // change the location for all engines in consist
                             for (Engine cEngine2 : engines) {
                                 if (cEngine2 != engine) {
@@ -260,10 +265,10 @@ public class EngineEditFrame extends RollingStockEditFrame {
             engineAttributeEditFrame.initComponents(EngineAttributeEditFrame.ROAD,
                     (String) roadComboBox.getSelectedItem());
         }
-        if (ae.getSource() == editModelButton) {
-            engineAttributeEditFrame.initComponents(EngineAttributeEditFrame.MODEL,
-                    (String) modelComboBox.getSelectedItem());
-        }
+        //if (ae.getSource() == editModelButton) {
+            //engineAttributeEditFrame.initComponents(EngineAttributeEditFrame.MODEL,
+                    //(String) modelComboBox.getSelectedItem());
+        //}
         if (ae.getSource() == editTypeButton) {
             engineAttributeEditFrame.initComponents(EngineAttributeEditFrame.TYPE,
                     (String) typeComboBox.getSelectedItem());
@@ -276,10 +281,10 @@ public class EngineEditFrame extends RollingStockEditFrame {
             engineAttributeEditFrame.initComponents(EngineAttributeEditFrame.OWNER,
                     (String) ownerComboBox.getSelectedItem());
         }
-        if (ae.getSource() == editGroupButton) {
-            engineAttributeEditFrame.initComponents(EngineAttributeEditFrame.CONSIST,
-                    (String) groupComboBox.getSelectedItem());
-        }
+        //if (ae.getSource() == editGroupButton) {
+            //engineAttributeEditFrame.initComponents(EngineAttributeEditFrame.CONSIST,
+                    //(String) groupComboBox.getSelectedItem());
+        //}
     }
 
     /**
@@ -336,23 +341,23 @@ public class EngineEditFrame extends RollingStockEditFrame {
                 lengthComboBox.setSelectedItem(_rs.getLength());
             }
         }
-        if (e.getPropertyName().equals(EngineModels.ENGINEMODELS_CHANGED_PROPERTY)) {
-            engineModels.updateComboBox(modelComboBox);
-            if (_rs != null) {
-                modelComboBox.setSelectedItem(((Engine) _rs).getModel());
-            }
-        }
-        if (e.getPropertyName().equals(ConsistManager.LISTLENGTH_CHANGED_PROPERTY)) {
-            InstanceManager.getDefault(ConsistManager.class).updateComboBox(groupComboBox);
-            if (_rs != null) {
-                groupComboBox.setSelectedItem(((Engine) _rs).getConsistName());
-            }
-        }
+        //if (e.getPropertyName().equals(EngineModels.ENGINEMODELS_CHANGED_PROPERTY)) {
+            //engineModels.updateComboBox(modelComboBox);
+            //if (_rs != null) {
+                //modelComboBox.setSelectedItem(((Engine) _rs).getModel());
+            //}
+        //}
+        //if (e.getPropertyName().equals(ConsistManager.LISTLENGTH_CHANGED_PROPERTY)) {
+            //InstanceManager.getDefault(ConsistManager.class).updateComboBox(groupComboBox);
+            //if (_rs != null) {
+                //groupComboBox.setSelectedItem(((Engine) _rs).getConsistName());
+            //}
+        //}
         if (e.getPropertyName().equals(EngineAttributeEditFrame.DISPOSE)) {
             engineAttributeEditFrame = null;
         }
     }
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EngineEditFrame.class);
+    private final static Logger log = LoggerFactory.getLogger(EngineEditFrame.class);
 
 }

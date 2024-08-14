@@ -65,7 +65,7 @@ public class Control {
     public static int max_len_string_weight_name = 4;
 
     // Car and Engine built date maximum string length
-    public static int max_len_string_built_name = 5;
+    public static int max_len_string_built_name = 12;
 
     // Train name maximum string length
     public static int max_len_string_train_name = 25;
@@ -171,7 +171,8 @@ public class Control {
             }
             if ((maximumStringLengths.getChild(Xml.MAX_LEN_STRING_BUILT_NAME) != null)
                     && (length = maximumStringLengths.getChild(Xml.MAX_LEN_STRING_BUILT_NAME).getAttribute(Xml.LENGTH)) != null) {
-                max_len_string_built_name = Integer.parseInt(length.getValue());
+                //max_len_string_built_name = Integer.parseInt(length.getValue());
+                max_len_string_built_name = 12;
             }
             if ((maximumStringLengths.getChild(Xml.MAX_LEN_STRING_TRAIN_NAME) != null)
                     && (length = maximumStringLengths.getChild(Xml.MAX_LEN_STRING_TRAIN_NAME).getAttribute(Xml.LENGTH)) != null) {

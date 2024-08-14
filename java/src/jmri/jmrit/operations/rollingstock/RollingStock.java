@@ -17,7 +17,9 @@ import jmri.jmrit.operations.locations.divisions.DivisionManager;
 import jmri.jmrit.operations.rollingstock.cars.*;
 import jmri.jmrit.operations.routes.RouteLocation;
 import jmri.jmrit.operations.setup.Setup;
-import jmri.jmrit.operations.trains.*;
+import jmri.jmrit.operations.trains.Train;
+import jmri.jmrit.operations.trains.TrainCommon;
+import jmri.jmrit.operations.trains.TrainManager;
 
 /**
  * Represents rolling stock, both powered (locomotives) and not powered (cars)
@@ -76,7 +78,6 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
 
     public static final String ERROR_TRACK = "ERROR wrong track for location"; // checks for coding error // NOI18N
 
-    // property changes
     public static final String TRACK_CHANGED_PROPERTY = "rolling stock track location"; // NOI18N
     public static final String DESTINATION_TRACK_CHANGED_PROPERTY = "rolling stock track destination"; // NOI18N
     public static final String TRAIN_CHANGED_PROPERTY = "rolling stock train"; // NOI18N
@@ -108,6 +109,7 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
     }
 
     public static String createId(String road, String number) {
+        // TODO: better unique ID
         return road + number;
     }
 
@@ -157,6 +159,7 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
      */
     @Override
     public String toString() {
+        // TODO: better unique ID
         return getRoadName() + " " + getNumber();
     }
 
@@ -320,6 +323,7 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
     public void setBuilt(String built) {
         String old = _built;
         _built = built;
+        // TODO validate date string
         if (!old.equals(built)) {
             setDirtyAndFirePropertyChange("rolling stock built", old, built); // NOI18N
         }
@@ -352,7 +356,7 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
         }
         return NONE;
     }
-    
+
     public String getSplitLocationName() {
         return TrainCommon.splitString(getLocationName());
     }
@@ -402,7 +406,7 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
     public String getSplitTrackName() {
         return TrainCommon.splitString(getTrackName());
     }
-    
+
     public String getTrackType() {
         if (getTrack() != null) {
             return getTrack().getTrackTypeName();
@@ -648,7 +652,7 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
         }
         return NONE;
     }
-    
+
     public String getSplitDestinationName() {
         return TrainCommon.splitString(getDestinationName());
     }
@@ -685,7 +689,7 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
         }
         return NONE;
     }
-    
+
     public String getSplitDestinationTrackName() {
         return TrainCommon.splitString(getDestinationTrackName());
     }
@@ -899,11 +903,12 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
                 try {
                     IdTag tag = InstanceManager.getDefault(IdTagManager.class).provideIdTag(id);
                     setIdTag(tag);
+                    setDirtyAndFirePropertyChange("rolling stock rfid", old, id); // NOI18N
                 } catch (IllegalArgumentException e) {
                     log.error("Exception recording tag {} - exception value {}", id, e.getMessage());
                 }
             }
-            setDirtyAndFirePropertyChange("rolling stock rfid", old, id); // NOI18N
+
         }
     }
 
@@ -1252,7 +1257,7 @@ public abstract class RollingStock extends PropertyChangeSupport implements Iden
         String old = _comment;
         _comment = comment;
         if (!old.equals(comment)) {
-            setDirtyAndFirePropertyChange(COMMENT_CHANGED_PROPERTY, old, comment); // NOI18N
+            setDirtyAndFirePropertyChange("rolling stock comment", old, comment); // NOI18N
         }
     }
 

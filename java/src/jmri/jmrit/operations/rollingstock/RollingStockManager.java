@@ -440,17 +440,38 @@ public abstract class RollingStockManager<T extends RollingStock> extends Proper
     protected static final int BY_ROAD = 1;
     protected static final int BY_TYPE = 2;
     protected static final int BY_COLOR = 3;
-    protected static final int BY_LOCATION = 4;
-    protected static final int BY_DESTINATION = 5;
-    protected static final int BY_TRAIN = 6;
-    protected static final int BY_MOVES = 7;
-    protected static final int BY_BUILT = 8;
-    protected static final int BY_OWNER = 9;
-    protected static final int BY_RFID = 10;
-    protected static final int BY_VALUE = 11;
-    protected static final int BY_LAST = 12;
-    protected static final int BY_BLOCKING = 13;
-    protected static final int BY_COMMENT = 14;
+    // BY_LOAD = 4
+    // BY_MODEL = 4
+    // BY_KERNEL = 5
+    // BY_CONSIST = 5
+    protected static final int BY_LOCATION = 6;
+    protected static final int BY_DESTINATION = 7;
+    protected static final int BY_TRAIN = 8;
+    protected static final int BY_MOVES = 9;
+    protected static final int BY_BUILT = 10;
+    protected static final int BY_OWNER = 11;
+    protected static final int BY_RFID = 12;
+    // BY_RWE = 13
+    // BY_HP = 13
+    // BY_FINAL_DEST = 14
+    protected static final int BY_VALUE = 15;
+    // BY_WAIT = 16
+    protected static final int BY_LAST = 17;
+    protected static final int BY_BLOCKING = 18;
+    // BY_PICKUP = 19
+    // BY_B_UNIT = 20
+    // BY_HAZARD = 21
+    // BY_RWL = 22
+    // BY_DIVISION = 23
+    protected static final int BY_COMMENT = 24;
+
+    private int compStrsAsInts(String r1, String r2) {
+        try {
+            return (Integer.parseInt(r1) - Integer.parseInt(r2));
+        } catch (Exception e) {
+            return (r1.compareToIgnoreCase(r2));
+        }
+    }
 
     protected java.util.Comparator<T> getComparator(int attribute) {
         switch (attribute) {
@@ -464,7 +485,9 @@ public abstract class RollingStockManager<T extends RollingStock> extends Proper
                 return (r1, r2) -> (r1.getColor().compareToIgnoreCase(r2.getColor()));
             case BY_LOCATION:
                 return (r1, r2) -> (r1.getStatus() + r1.getLocationName() + r1.getTrackName())
-                        .compareToIgnoreCase(r2.getStatus() + r2.getLocationName() + r2.getTrackName());
+                        .compareToIgnoreCase(r2.getStatus()
+                                + r2.getLocationName()
+                                + r2.getTrackName());
             case BY_DESTINATION:
                 return (r1, r2) -> (r1.getDestinationName() + r1.getDestinationTrackName())
                         .compareToIgnoreCase(r2.getDestinationName() + r2.getDestinationTrackName());
@@ -476,7 +499,8 @@ public abstract class RollingStockManager<T extends RollingStock> extends Proper
                 return (r1,
                         r2) -> (convertBuildDate(r1.getBuilt()).compareToIgnoreCase(convertBuildDate(r2.getBuilt())));
             case BY_OWNER:
-                return (r1, r2) -> (r1.getOwnerName().compareToIgnoreCase(r2.getOwnerName()));
+                //return (r1, r2) -> (r1.getOwnerName().compareToIgnoreCase(r2.getOwnerName()));
+                return (r1, r2) -> (compStrsAsInts(r1.getOwnerName(), r2.getOwnerName()));
             case BY_RFID:
                 return (r1, r2) -> (r1.getRfid().compareToIgnoreCase(r2.getRfid()));
             case BY_VALUE:

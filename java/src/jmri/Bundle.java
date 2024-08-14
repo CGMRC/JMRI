@@ -41,6 +41,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * JMRI is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * <p>
  *
  * @author Bob Jacobsen Copyright (C) 2012
  * @since 3.3.1
@@ -201,7 +202,8 @@ public class Bundle {
     // the following is different from the method in subclasses because
     // this is the root of the search tree
     protected String retry(Locale locale, String key) throws MissingResourceException {
-        throw new MissingResourceException("Resource '" + key + "' not found", this.getClass().toString(), key); // NOI18N
+        return key;
+        //throw new MissingResourceException("Resource '" + key + "' not found", this.getClass().toString(), key); // NOI18N
     }
 
     private final static Bundle b = new Bundle();

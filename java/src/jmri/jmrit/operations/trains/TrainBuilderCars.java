@@ -1125,8 +1125,8 @@ public class TrainBuilderCars extends TrainBuilderEngines {
         String status = car.checkDestination(track.getLocation(), track);
         if (!status.equals(Track.OKAY)) {
             if (track.getScheduleMode() == Track.SEQUENTIAL && status.startsWith(Track.SCHEDULE)) {
-                addLine(_buildReport, SEVEN, Bundle.getMessage("buildTrackSequentialMode", track.getName(),
-                        track.getLocation().getName(), status));
+                addLine(_buildReport, SEVEN, Bundle.getMessage("buildTrackSequentialMode",
+                        track.getLocation().getName(), track.getName(), status));
             }
             // if the track has an alternate track don't abort if the issue was
             // space
@@ -1214,8 +1214,10 @@ public class TrainBuilderCars extends TrainBuilderEngines {
                                        // move car
         }
         if (car.getDestination() == null) {
-            addLine(_buildReport, SEVEN,
-                    Bundle.getMessage("buildNotAbleToSetDestination", car.toString(), router.getStatus()));
+            if (!router.getStatus().equals(Track.OKAY)) {
+                addLine(_buildReport, SEVEN,
+                        Bundle.getMessage("buildNotAbleToSetDestination", car.toString(), router.getStatus()));
+            }
             car.setFinalDestination(null);
             car.setFinalDestinationTrack(null);
             // don't move car if another train can
@@ -1806,12 +1808,28 @@ public class TrainBuilderCars extends TrainBuilderEngines {
             }
         }
         // did we find a destination?
-        if (trackSave != null) {
-            if (trackSave.isSpur()) {
+        if (trackSave != null && rldSave != null) {
+            // determine if local staging move is allowed (leaves car in staging)
+            if ((_train.isAllowReturnToStagingEnabled() || Setup.isStagingAllowReturnEnabled()) &&
+                    rl.isDropAllowed() &&
+                    rl.getLocation().isStaging() &&
+                    trackSave.isStaging() &&
+                    rl.getLocation() == rldSave.getLocation() &&
+                    !_train.isLocalSwitcher() &&
+                    !car.isPassenger() &&
+                    !car.isCaboose() &&
+                    !car.hasFred()) {
+                addLine(_buildReport, SEVEN,
+                        Bundle.getMessage("buildLeaveCarInStaging", car.toString(), car.getLocationName(),
+                                car.getTrackName()));
+                rldSave = rl; // make local move
+            } else if (trackSave.isSpur()) {
                 car.setScheduleItemId(trackSave.getScheduleItemId());
                 trackSave.bumpSchedule();
                 log.debug("Sending car to spur ({}, {}) with car schedule id ({}))", trackSave.getLocation().getName(),
                         trackSave.getName(), car.getScheduleItemId());
+            } else {
+                car.setScheduleItemId(Car.NONE);
             }
             if (finalDestinationTrackSave != null) {
                 car.setFinalDestination(finalDestinationTrackSave.getLocation());

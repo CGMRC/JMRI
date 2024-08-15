@@ -883,7 +883,7 @@ LogixNG: IQ:AUTO:0001
 
       <!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
 
-      <h4>Warrant</h4>
+      <h4 id="WarrantAction">Warrant</h4>
 
       <ul>
         <li><strong>Allocate Warrant Route:</strong> Allocates (reserves) the OBlocks comprising
@@ -1508,6 +1508,24 @@ LogixNG: IQ:AUTO:0001
         "images/chapter5/mqtt_publish.png" alt="Chapter 5 digital action mqtt publish"></a>
       </div>
 
+      <p><span class="since">since 5.9.1</span><strong>Retain</strong> is used to tell the MQTT
+      broker if it should also send the message to new subscribers or if it should only send
+      the message to current subscribers.</p>
+
+      <div style="margin-left: 2em;">
+        <dl>
+          <dt>Default</dt>
+          <dd>Use the connection setting.</dd>
+
+          <dt>Yes</dt>
+          <dd>Tell the broker to send the message to the current subscribers and also send the
+          message to new subscribers when they subscribe.</dd>
+
+          <dt>No</dt>
+          <dd>Tell the broker to only send the message to the current subscribers. New subscribers
+          will not see the message.</dd>
+        </dl>
+      </div>
       <!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
 
       <h4>Subscribe</h4>
@@ -1617,6 +1635,50 @@ LogixNG: IQ:AUTO:0001
       values are strings, so the formula is enclosed with a str() command.  Node values can also be
       other data types such as integer and float.  LogixNG has int() and float() commands to handle
       those data types.</p>
+
+      <!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+
+      <h4 id="execute-action">Execute action<span class="since">since 5.7.8</span></h4>
+
+      <p><strong>Execute action</strong> is used to execute a different part of the current
+      ConditionalNG.  This can be useful if you need to execute a part of the ConditionalNG at
+      several different places, for example if you have several <strong>Listen On Beans - Local
+      variable</strong> in the same ConditionalNG.  This is similar to calling a sub-routine.</p>
+
+      <p>The first step is to assign a <strong>user name</strong> to the action to be executed.
+      Right click on the action and select <strong>Change user name</strong>.  Enter the user
+      name and click on OK.</p>
+
+      <div style="margin-left: 2em">
+        <a href="images/chapter5/execute-action-name.png">
+        <img src="images/chapter5/execute-action-name.png"
+        alt="Chapter 5 execute action name"
+        style="border: 1px solid black; margin: 1em; padding: 0.1em;"></a>
+      </div>
+
+      <p>When the <strong>Execute action</strong> is added, a dialog is displayed.  Select the user
+      name from the combo box and click on OK.</p>
+
+      <div style="margin-left: 2em">
+        <a href="images/chapter5/execute-action.png">
+        <img src="images/chapter5/execute-action.png"
+        alt="Chapter 5 execute action"></a>
+      </div>
+
+      <p>This example calls a <strong>sub</strong> action to display the current local variables.</p>
+
+      <div style="margin-left: 2em">
+        <a href="images/chapter5/execute-action-sample.png">
+        <img src="images/chapter5/execute-action-sample.png"
+        alt="Chapter 5 execute action sample"></a>
+      </div>
+
+      <p>Normally a ConditionalNG will execute all of the actions in the top level <strong>Many</strong>.
+      In this example, that would result in a second execution of the <strong>sub</strong> action.
+      The <strong>Return</strong> action is used to finish the ConditionalNG execution sequence.</p>
+
+      <p>Note:  This example was used to verify that the local variable list varies depending on
+      when the <strong>sub</strong> action was called.</p>
 
       <!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
 

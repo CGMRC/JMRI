@@ -16,12 +16,27 @@
 
         <h4>Bachrus Speedo</h4>
             <ul>
-                <li></li>
+                <li>Revamped the Bachrus speed matcher to support configuration and different styles of speedmatching</li>
+				<li>Added ability to manually read and set a locomotive's momentum</li>
+				<li>Basic Speed matcher
+					<ul>
+						<li>Matches a locomotive to the given starting and top speeds</li>
+						<li>Can use the basic motor control CVs, the speed table, or ESU's speed table</li>
+						<li>Can configure if and how long the locomotive is warmed up and whether reverse is trimmed to match forward</li>
+					</ul>
+				</li>
+				<li>Speed Step Scale Speed matcher
+					<ul>
+						<li>Matches a locomotive to the speed step in 128 speed step mode (for example, locomotive goes 11 mph or kph at speed step 11 in 128 speed step mode) up to the given max speed</li>
+						<li>Can use the speed table or ESU's speed table</li>
+						<li>Can configure if and how long the locomotive is warmed up and whether reverse is trimmed to match forward</li>
+					</ul>
+				</li>
             </ul>
 
         <h4><a href="http://bidib.org/index_e.html">BiDiB</a></h4>
             <ul>
-                <li></li>
+                <li>BiDiB now uses JSerialComm instead of PureJavaComm - no user impact.</li>
             </ul>
 
         <h4>CBUS</h4>
@@ -36,7 +51,7 @@
 
         <h4>DCC++ and DCC-EX</h4>
             <ul>
-                <li>Can use DCCppOverTCPServer to connect DCC-EX native protocol thru JMRI</li>
+                <li></li>
             </ul>
 
         <h4>DCC4pc</h4>
@@ -106,7 +121,7 @@
 
         <h4>MQTT</h4>
             <ul>
-                <li></li>
+                <li>Set the max-in-flight number to 100 to avoid overflow errors.</li>
             </ul>
 
         <h4>MRC</h4>
@@ -126,7 +141,13 @@
 
         <h4><a href="http://openlcb.org">OpenLCB</a> / LCC</h4>
             <ul>
-                <li></li>
+                <li>Updates the OpenLCB library so that
+                    <ul>
+                        <li>You can write configuration information to a node 
+                            even if one or more items are out of range.</li>
+                        <li>The new &lt;action&gt; element in CDI 
+                            will be properly displayed.</li>
+                    <ul>
             </ul>
 
         <h4>Powerline</h4>
@@ -311,7 +332,7 @@
 
         <h4>SoundTraxx</h4>
             <ul>
-                <li>Improved the HO 2 Truck Climax (2climax) definition.</li>
+                <li></li>
             </ul>
 
         <h4>Tam Valley Depot</h4>
@@ -341,7 +362,7 @@
 
         <h4>Trix Modelleisenbahn</h4>
             <ul>
-                <li></li>
+                <li>New definition for the Trix Sound BR23 (22230) decoder</li>
             </ul>
 
         <h4>Uhlenbrock</h4>
@@ -374,12 +395,21 @@
                 <li></li>
             </ul>
 
-    <h3>DecoderPro</h3>
-        <a id="DecoderPro" name="DecoderPro"></a>
+    <h3>Control Panel Editor</h3>
+        <a id="CPE" name="CPE"></a>
         <ul>
-            <li>Better handling of selected items when roster list is updated</li>
-            <li>Enable/Disable bottom controls depending on selected item</li>
+            <li></li>
         </ul>
+        <h4>Circuit Builder</h4>
+            <a id="CPE-CB" name="CPE-CB"></a>
+            <ul>
+                <li></li>
+            </ul>
+        <h4>Palette</h4>
+            <a id="CPE-P" name="CPE-P"></a>
+            <ul>
+                <li></li>
+            </ul>
 
     <h3>CTC Tool</h3>
         <a id="PE-CTC" name="PE-CTC"></a>
@@ -387,11 +417,16 @@
             <li></li>
         </ul>
 
+    <h3>DecoderPro</h3>
+        <a id="DecoderPro" name="DecoderPro"></a>
+        <ul>
+            <li></li>
+        </ul>
+
    <h3>Dispatcher</h3>
         <a id="Dispatcher" name="Dispatcher"></a>
         <ul>
-             <li>Allow User to enter a train name of their choosing.</li>
-             <li>Add Transit Action to attempt to allocate beyond next safe section.</li>
+             <li></li>
         </ul>
 
     <h3>Dispatcher System</h3>
@@ -409,9 +444,7 @@
     <h3>Layout Editor</h3>
         <a id="LE" name="LE"></a>
         <ul>
-            <li>Add the <strong>hidden</strong> attribute to the Layout Editor <strong>Shape</strong>
-            item.  The center popup menu has an option to hide the shape when not editing.  The
-            <strong>setHidden(boolean)</strong> public method can be used by scripts and LogixNG.</li>
+            <li></li>
         </ul>
 
         <h4>NX - Entry/Exit Tool</h4>
@@ -428,17 +461,6 @@
     <h3>LogixNG</h3>
         <a id="LogixNG" name="LogixNG"></a>
         <ul>
-          <li>In panel file print routine (XSLT), separate out "inline" LogixNGs from table-based.</li>
-          <li>Add an <strong>Examples</strong> section to the LogixNG Reference.</li>
-          <li>Add the <strong>Set a yard ladder</strong> example to the Examples section.</li>
-          <li>The action <strong>Program On Main</strong> is improved.
-              It's now possible to select long or short address. It's
-              also possible to select not to wait until programming is
-              completed.</li>
-          <li>For most actions and expressions, when selecting indirect addressing
-              of an enum, the button <strong>Show valid names</strong> are added.
-              Pressing this button opens a dialog that shows a list of valid values
-              and their descriptions.</li>
           <li></li>
         </ul>
 
@@ -448,18 +470,10 @@
             <li></li>
         </ul>
 
-    <h3>Operations</h3>
+    <h3>OperationsPro</h3>
         <a id="Operations" name="Operations"></a>
         <ul>
-            <li>Simplified the creation and update of switch lists when using MR SLAM</li>
-            <li>Improvements to destination checking button for C/I tracks</li>
-            <li>Added warning messages if operation files have been corrupted</li>
-            <li>Files are now saved to the millisecond, fixes fast Automation actions and loops</li>
-            <li>Improvements to export Trains</li>
-            <li>Significant improvements to Car importing</li>
-            <li>Conductor improvements when sorting by track name</li>
-            <li>Web Manifest and Conductor improvements, Manifest now supports utility cars. Comment colors now supported</li>
-            <li>Switch lists can now display train's departure time</li>
+            <li></li>
         </ul>
 
    <h3>Panel Editor</h3>
@@ -467,22 +481,6 @@
         <ul>
             <li></li>
         </ul>
-
-    <h3>Control Panel Editor</h3>
-        <a id="CPE" name="CPE"></a>
-        <ul>
-            <li></li>
-        </ul>
-        <h4>Circuit Builder</h4>
-            <a id="CPE-CB" name="CPE-CB"></a>
-            <ul>
-                <li></li>
-            </ul>
-        <h4>Palette</h4>
-            <a id="CPE-P" name="CPE-P"></a>
-            <ul>
-                <li></li>
-            </ul>
 
     <h3>Preferences</h3>
         <a id="Preferences" name="Preferences"></a>
@@ -563,11 +561,7 @@
     <h3>Throttle</h3>
         <a id="throttle" name="throttle"></a>
         <ul>
-            <li>A visible property was added to function buttons defined in the label&amp;media panels of decoderpro, this property is used by the throttle UI.</li>
-            <li>A throttle preference was added to show/hide the speed step selector on the control panel of any new UI throttles.</li>
-            <li>When a throttle UI layout is saved using the File->Save current throttle menu entry, if it is linked to a roster entry, the user will be proposed to also export function buttons customizations to the roster entry.</li>
-            <li>Fix issue with throttle window title not resetting when a throttle is released</li>
-            <li>Fix issue with selection foreground color in throttles list window</li>
+            <li></li>
         </ul>
 
     <h3>Timetable</h3>
@@ -597,8 +591,13 @@
    <h3>Web Access</h3>
         <a id="WA" name="WA"></a>
         <ul>
-            <li>new web ui for working with cars</li>
-            <li>web panels: add handling for some text memory inputs</li>
+            <li>new parameter ("protect=yes") to treat web-panel as read-only</li>
+        </ul>
+
+   <h3>Web Server</h3>
+        <a id="server" name="server"></a>
+        <ul>
+            <li></li>
         </ul>
 
     <h3>Where Used</h3>
@@ -613,13 +612,6 @@
             <li></li>
         </ul>
 
-   <h3>Web Server</h3>
-        <a id="server" name="server"></a>
-        <ul>
-            <li>Fixed a problem with clicks ending up in the wrong place
-                on a Table, e.g. Turnout Table, etc, when using the frame server.</li>
-        </ul>
-
    <h3>Virtual Sound Decoder</h3>
         <a id="VSD" name="VSD"></a>
         <ul>
@@ -629,6 +621,6 @@
     <h3>Miscellaneous</h3>
         <a id="Misc" name="Misc"></a>
         <ul>
-            <li>Improvements to File Selection Dialog boxes when displayed with &quot;Always On Top&quot; window frames present.</li>
+            <li></li>
         </ul>
 

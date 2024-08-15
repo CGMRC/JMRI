@@ -2842,6 +2842,23 @@ public class CreateLogixNGTreeScaffold {
         publish = new jmri.jmrix.mqtt.logixng.Publish(digitalActionManager.getAutoSystemName(), null, _mqttMemo);
         publish.getSelectTopic().setValue("topic");
         publish.getSelectMessage().setValue("message");
+        publish.setRetain(jmri.jmrix.mqtt.logixng.Publish.Retain.Default);
+        maleSocket = digitalActionManager.registerAction(publish);
+        maleSocket.setEnabled(false);
+        actionManySocket.getChild(indexAction++).connect(maleSocket);
+
+        publish = new jmri.jmrix.mqtt.logixng.Publish(digitalActionManager.getAutoSystemName(), null, _mqttMemo);
+        publish.getSelectTopic().setValue("otherTopic");
+        publish.getSelectMessage().setValue("otherMessage");
+        publish.setRetain(jmri.jmrix.mqtt.logixng.Publish.Retain.Yes);
+        maleSocket = digitalActionManager.registerAction(publish);
+        maleSocket.setEnabled(false);
+        actionManySocket.getChild(indexAction++).connect(maleSocket);
+
+        publish = new jmri.jmrix.mqtt.logixng.Publish(digitalActionManager.getAutoSystemName(), null, _mqttMemo);
+        publish.getSelectTopic().setValue("topic");
+        publish.getSelectMessage().setValue("message");
+        publish.setRetain(jmri.jmrix.mqtt.logixng.Publish.Retain.No);
         maleSocket = digitalActionManager.registerAction(publish);
         maleSocket.setEnabled(false);
         actionManySocket.getChild(indexAction++).connect(maleSocket);
@@ -3103,6 +3120,7 @@ public class CreateLogixNGTreeScaffold {
         actionManySocket.getChild(indexAction++).connect(maleSocket);
 
         entryExit = new ActionEntryExit(digitalActionManager.getAutoSystemName(), null);
+        entryExit.setUserName("An entry/exit action");     // Used by executeAction below
         entryExit.setComment("A comment");
         entryExit.getSelectEnum().setEnum(ActionEntryExit.Operation.SetNXPairDisabled);
         entryExit.getSelectNamedBean().setAddressing(NamedBeanAddressing.Reference);
@@ -3114,6 +3132,18 @@ public class CreateLogixNGTreeScaffold {
         entryExit.getSelectEnum().setLocalVariable("index2");
         entryExit.getSelectEnum().setReference("{IM2}");
         maleSocket = digitalActionManager.registerAction(entryExit);
+        actionManySocket.getChild(indexAction++).connect(maleSocket);
+
+
+        ExecuteAction executeAction = new ExecuteAction(digitalActionManager.getAutoSystemName(), null);
+        maleSocket = digitalActionManager.registerAction(executeAction);
+        maleSocket.setEnabled(false);
+        actionManySocket.getChild(indexAction++).connect(maleSocket);
+
+        executeAction = new ExecuteAction(digitalActionManager.getAutoSystemName(), null);
+        executeAction.setComment("A comment");
+        executeAction.getSelectNamedBean().setNamedBean("An entry/exit action");
+        maleSocket = digitalActionManager.registerAction(executeAction);
         actionManySocket.getChild(indexAction++).connect(maleSocket);
 
 

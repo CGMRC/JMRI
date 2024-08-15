@@ -71,6 +71,7 @@ public class TrainManager extends PropertyChangeSupport
     public static final String ROW_COLOR_NAME_CHANGED_PROPERTY = "TrainsRowColorChange"; // NOI18N
     public static final String TRAINS_BUILT_CHANGED_PROPERTY = "TrainsBuiltChange"; // NOI18N
     public static final String TRAINS_SHOW_FULL_NAME_PROPERTY = "TrainsShowFullName"; // NOI18N
+    public static final String TRAINS_SAVED_PROPERTY = "TrainsSaved"; // NOI18N
 
     public TrainManager() {
     }
@@ -479,9 +480,8 @@ public class TrainManager extends PropertyChangeSupport
     }
 
     /**
-     *
      * @param car         The car looking for a train.
-     * @param buildReport The build report for logging.
+     * @param buildReport The optional build report for logging.
      * @return Train that can service car from its current location to the its
      *         destination.
      */
@@ -490,10 +490,9 @@ public class TrainManager extends PropertyChangeSupport
     }
 
     /**
-     *
-     * @param car          The car looking for a train.
+     * @param car           The car looking for a train.
      * @param excludeTrains The trains not to try.
-     * @param buildReport  The build report for logging.
+     * @param buildReport   The optional build report for logging.
      * @return Train that can service car from its current location to the its
      *         destination.
      */
@@ -502,7 +501,7 @@ public class TrainManager extends PropertyChangeSupport
         addLine(buildReport, Bundle.getMessage("trainFindForCar", car.toString(), car.getLocationName(),
                 car.getTrackName(), car.getDestinationName(), car.getDestinationTrackName()));
 
-        main: for (Train train : getTrainsByIdList()) {
+        main: for (Train train : getTrainsByNameList()) {
             if (excludeTrains.contains(train)) {
                 continue;
             }
@@ -1238,6 +1237,7 @@ public class TrainManager extends PropertyChangeSupport
         for (Train train : getTrainsByIdList()) {
             trains.addContent(train.store());
         }
+        firePropertyChange(TRAINS_SAVED_PROPERTY, true, false);
     }
 
     /**

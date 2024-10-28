@@ -1,5 +1,6 @@
 package jmri.jmrit.operations.rollingstock.cars;
 
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jmri.InstanceManager;
+import jmri.jmrit.operations.OperationsTableModel;
 import jmri.jmrit.operations.setup.Control;
 import jmri.jmrit.operations.setup.Setup;
 import jmri.jmrit.operations.trains.TrainCommon;
@@ -24,7 +26,7 @@ import jmri.util.table.ButtonRenderer;
  *
  * @author Daniel Boudreau Copyright (C) 2008, 2011, 2012, 2016
  */
-public class CarsTableModel extends javax.swing.table.AbstractTableModel implements PropertyChangeListener {
+public class CarsTableModel extends OperationsTableModel implements PropertyChangeListener {
 
     CarManager carManager = InstanceManager.getDefault(CarManager.class); // There is only one manager
 
@@ -182,6 +184,15 @@ public class CarsTableModel extends javax.swing.table.AbstractTableModel impleme
             default:
                 return "Error"; // NOI18N
         }
+    }
+
+    @Override
+    protected Color getForegroundColor(int row) {
+        Car car = carList.get(row);
+        if (car.getLocation() != null && car.getTrack() == null) {
+            return Color.red;
+        }
+        return super.getForegroundColor(row);
     }
 
     public void toggleSelectVisible() {
@@ -382,6 +393,7 @@ public class CarsTableModel extends javax.swing.table.AbstractTableModel impleme
     }
 
     void initTable(JTable table, CarsTableFrame frame) {
+        super.initTable(table);
         _table = table;
         _frame = frame;
         initTable();
@@ -532,8 +544,6 @@ public class CarsTableModel extends javax.swing.table.AbstractTableModel impleme
             case WAIT_COLUMN:
             //case OWNER_COLUMN:
                 return Integer.class;
-            //case WEIGHT_OZ_COLUMN:
-                //return Float.class;
             default:
                 return String.class;
         }
@@ -668,7 +678,7 @@ public class CarsTableModel extends javax.swing.table.AbstractTableModel impleme
             case PICKUP_COLUMN:
                 return car.getPickupScheduleName();
             case LAST_COLUMN:
-                return car.getLastDate();
+                return car.getSortDate();
             case COMMENT_COLUMN:
                 return car.getComment();
             case SET_COLUMN:

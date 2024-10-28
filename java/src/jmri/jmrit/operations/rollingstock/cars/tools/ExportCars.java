@@ -70,7 +70,7 @@ public class ExportCars extends XmlFile {
             writeFile(path);
         } catch (IOException e) {
             log.error("Exception while writing the new CSV operations file at " +
-                      path + ", may not be complete", e);
+                      path + ", may not be complete", e.gotLocalizedMessage());
         }
     }
 
@@ -153,7 +153,7 @@ public class ExportCars extends XmlFile {
                         car.getTypeExtensions(),
                         car.getWait(),
                         car.getPickupScheduleName(),
-                        car.getLastDate(),
+                        car.getSortDate(),
                         car.getReturnWhenEmptyDestinationName(),
                         LOCATION_TRACK_SEPARATOR,
                         car.getReturnWhenEmptyDestTrackName(),
@@ -179,11 +179,19 @@ public class ExportCars extends XmlFile {
                 _carList.size(), name}), Bundle.getMessage("ExportComplete"),
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
+<<<<<<< HEAD
             log.error("Can not open export cars CSV file: {}", file.getName());
             JOptionPane.showMessageDialog(null,
                     MessageFormat.format(Bundle.getMessage("ExportedCarsToFile"),
                             new Object[] { 0, name }),
                     Bundle.getMessage("ExportFailed"), JOptionPane.ERROR_MESSAGE);
+=======
+            log.error("Can not open export cars CSV file: {}", e.getLocalizedMessage());
+            JmriJOptionPane.showMessageDialog(null,
+                    Bundle.getMessage("ExportedCarsToFile",
+                            0, defaultOperationsFilename()),
+                    Bundle.getMessage("ExportFailed"), JmriJOptionPane.ERROR_MESSAGE);
+>>>>>>> c5f7dcf85710f7fa0de1107ba2f546ae6311355d
         }
     }
 
